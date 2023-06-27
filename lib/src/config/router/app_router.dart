@@ -1,6 +1,8 @@
 import 'package:go_router/go_router.dart';
 import 'package:trackbudi_vendor/src/config/keys/routes.dart';
 import 'package:trackbudi_vendor/src/features/presentation/views/main_auth/account_selection.dart';
+import 'package:trackbudi_vendor/src/features/presentation/views/main_auth/community_guideline.dart';
+import 'package:trackbudi_vendor/src/features/presentation/views/main_auth/login_email.dart';
 import 'package:trackbudi_vendor/src/features/presentation/views/main_auth/login_view.dart';
 import 'package:trackbudi_vendor/src/features/presentation/views/main_auth/logistics.dart';
 import 'package:trackbudi_vendor/src/features/presentation/views/main_auth/otp_view.dart';
@@ -8,6 +10,7 @@ import 'package:trackbudi_vendor/src/features/presentation/views/main_auth/perso
 import 'package:trackbudi_vendor/src/features/presentation/views/main_auth/phone_number.dart';
 import 'package:trackbudi_vendor/src/features/presentation/views/main_auth/vendors.dart';
 
+import '../../features/presentation/views/main_auth/community_guideline_preview.dart';
 import '../../features/presentation/views/onboarding/onboarding.dart';
 import '../../features/presentation/views/onboarding/splashscreen.dart';
 
@@ -50,4 +53,16 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
           name: AppRoutes.logistics,
           path: AppRoutes.logistics,
           builder: (_, state) => const Logistics()),
+      GoRoute(
+          name: AppRoutes.loginWithEmail,
+          path: AppRoutes.loginWithEmail,
+          builder: (_, state) => LoginEmail()),
+      GoRoute(
+          name: AppRoutes.commuinityGuide,
+          path: AppRoutes.commuinityGuide,
+          builder: (_, state) => const CommunityGuideline()),
+      GoRoute(
+          name: AppRoutes.guidelinePreview,
+          path: AppRoutes.guidelinePreview,
+          builder: (_, state) => const CommunityGuildelinePreview()),
     ]);

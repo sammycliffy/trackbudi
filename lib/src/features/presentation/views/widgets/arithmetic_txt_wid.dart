@@ -3,15 +3,18 @@ import 'package:trackbudi_vendor/src/core/shared/resources/colors.dart';
 
 arithmeticContainer(String symbol) {
   return Container(
-    width: 20,
-    height: 20,
+    width: 30,
+    height: 30,
+    padding: const EdgeInsets.only(bottom: 2),
     decoration: BoxDecoration(
         border: Border.all(color: AppColors.textGrey),
         shape: BoxShape.circle,
         color: AppColors.white),
     child: Center(
-      child: Padding(
-          padding: const EdgeInsets.only(bottom: 1), child: Text(symbol)),
+      child: Text(
+        symbol,
+        style: const TextStyle(fontSize: 21, fontWeight: FontWeight.w500),
+      ),
     ),
   );
 }

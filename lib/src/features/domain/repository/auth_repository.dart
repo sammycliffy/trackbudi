@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:trackbudi_vendor/src/features/data/models/logistics_model.dart';
 import 'package:trackbudi_vendor/src/features/data/models/phone_response.dart';
 
 import '../../../config/keys/app_keys.dart';
@@ -12,11 +13,39 @@ import '../../../config/services/storage_service.dart';
 class AuthRepo {
   final _storage = locator<LocalStorageService>();
 
+  Future addLogistics(LogisticsModel logisticsModel) async {
+    log(logisticsModel.toJson().toString());
+    final response = await ApiClient.post(Endpoints.createLogisticPartner,
+        body: logisticsModel.toJson(), useToken: true);
+
+    if (response.status == "success") {
+      return true;
+    }
+    return false;
+  }
+
   Future<bool> login(
     String countryCode,
     String phoneNumber,
   ) async {
     var body = {'countryCode': countryCode, 'phone': phoneNumber};
+    final response =
+        await ApiClient.post(Endpoints.login, body: body, useToken: false);
+
+    if (response.status == 'success') {
+      _storage.saveDataToDisk(AppKeys.user, json.encode(response.data));
+      _storage.saveDataToDisk(
+          AppKeys.token, json.encode(response.data['token']));
+      return true;
+    }
+    return false;
+  }
+
+  Future<bool> loginWithEmail(
+    String email,
+    String password,
+  ) async {
+    var body = {'email': email, 'password': password};
     final response =
         await ApiClient.post(Endpoints.login, body: body, useToken: false);
 
@@ -52,7 +81,7 @@ class AuthRepo {
     final response =
         await ApiClient.post(Endpoints.userTypes, body: body, useToken: true);
 
-    if (response.statusCode == "success") {
+    if (response.status == "success") {
       return true;
     }
     return false;

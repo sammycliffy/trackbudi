@@ -2,211 +2,308 @@ import 'dart:developer';
 
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
+import 'package:trackbudi_vendor/src/config/keys/routes.dart';
+import 'package:trackbudi_vendor/src/core/mixin/validators.dart';
 import 'package:trackbudi_vendor/src/core/shared/resources/app_images.dart';
 import 'package:trackbudi_vendor/src/core/shared/resources/app_spacer.dart';
 import 'package:trackbudi_vendor/src/core/shared/resources/colors.dart';
+import 'package:trackbudi_vendor/src/features/data/models/logistics_model.dart';
+import 'package:trackbudi_vendor/src/features/domain/repository/auth_repository.dart';
+import 'package:trackbudi_vendor/src/features/presentation/views/widgets/app_app_bar.dart';
 import 'package:trackbudi_vendor/src/features/presentation/views/widgets/app_country_widget.dart';
 import 'package:trackbudi_vendor/src/features/presentation/views/widgets/app_divider.dart';
 import 'package:trackbudi_vendor/src/features/presentation/views/widgets/app_dropdown.dart';
 import 'package:trackbudi_vendor/src/features/presentation/views/widgets/app_textformfield.dart';
 import 'package:trackbudi_vendor/src/features/presentation/views/widgets/custom_text.dart';
 import 'package:trackbudi_vendor/src/features/presentation/views/widgets/trackbudi_button.dart';
+import 'package:trackbudi_vendor/src/features/presentation/views/widgets/vehicle_widget.dart';
 
-class Logistics extends HookWidget {
+class Logistics extends StatefulWidget {
   const Logistics({super.key});
 
   @override
+  State<Logistics> createState() => _LogisticsState();
+}
+
+class _LogisticsState extends State<Logistics> {
+  final AuthRepo _authRepo = AuthRepo();
+  final _nameOfCompany = TextEditingController();
+  final _address = TextEditingController();
+  final _country = TextEditingController();
+  final _landMark = TextEditingController();
+  final _website = TextEditingController();
+  final _formkey = GlobalKey<FormState>();
+  final _goodType = TextEditingController();
+  final _deliveriesPerMonth = TextEditingController();
+  final _aboutUs = TextEditingController();
+  final referralCode = TextEditingController();
+  final _latitude = TextEditingController();
+  final _longitude = TextEditingController();
+  List<VehicleTypes> newVehicleType = [];
+  List<String> whatDoyouMove = [];
+  bool isValidated = false;
+  bool isButtonDisabled = true;
+
+  List<Map> vehicleTypes = [
+    {"vehicleType": "Motor bike", "quantity": 0, "isSelected": false},
+    {"vehicleType": "Mini van", "quantity": 0, "isSelected": false},
+    {"vehicleType": "Truck", "quantity": 0, "isSelected": false}
+  ];
+
+  List<String> deliveriesPerMonth = [
+    "Select",
+    "0 - 100",
+    "100 - 1000",
+    "1000 - 10000",
+    "10000",
+    "Just getting Started"
+  ];
+
+  List<String> aboutUs = [
+    "Select",
+    "Word of mouth",
+    "Instagram",
+    "Twitter",
+    "Google Search"
+  ];
+
+  @override
   Widget build(BuildContext context) {
-    final isButtonDisabled = useState<bool>(false);
-    final isLoading = useState<bool>(true);
     return Scaffold(
+      appBar: appBar(context),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Image.asset(
-                    AppImages.logisticsHeading,
-                    width: 80,
-                    height: 80,
-                  ),
-                  Flexible(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        customText(
-                            text: 'Company information',
-                            fontSize: 14,
-                            textColor: AppColors.textPrimary),
-                        heightSpace(1),
-                        bodyText(text: 'We want to know more about you')
-                      ],
+          child: Form(
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            onChanged: () {
+              setState(() {
+                isButtonDisabled = _formkey.currentState!.validate();
+              });
+            },
+            key: _formkey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Image.asset(
+                      AppImages.logisticsHeading,
+                      width: 80,
+                      height: 80,
                     ),
-                  )
-                ],
-              ),
-              const AppDivider(),
-              heightSpace(6),
-              const TrackBudiTextFormField(
-                label: 'Name of Company',
-              ),
-              heightSpace(2),
-              customText(
-                  text: 'Select country',
-                  fontSize: 11,
-                  textColor: AppColors.textPrimary),
-              heightSpace(2),
-              CountryWidget(selectCountry: (val) => log(val.toString())),
-              heightSpace(2),
-              const TrackBudiTextFormField(
-                label: 'Address',
-                // error: state.address.invalid ? state.address.error?.name : null,
-                // onChanged: (p0) =>
-                //     ref.read(authNotifier.notifier).addressChanged(p0),
-              ),
-              heightSpace(2),
-              const TrackBudiTextFormField(
-                label: 'Landmark',
-              ),
-              heightSpace(2),
-              const TrackBudiTextFormField(
-                label: 'Website',
-                // onChanged: (p0) => ref.read(authNotifier.notifier).website(p0),
-                hintText: 'Optional',
-              ),
-              heightSpace(3),
-              customText(
-                  text: 'Vehicle type',
-                  fontSize: 11,
-                  textColor: AppColors.textPrimary),
-              heightSpace(2),
-              Column(
-                children: ["shop"]
-                    .asMap()
-                    .map((index, element) => MapEntry(
-                          index,
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 5),
-                            child: Container(
-                              color: Colors.red,
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 15),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: <Widget>[
-                                    const Icon(
-                                      Icons.delete,
-                                      color: AppColors.white,
-                                    ),
-                                    widthSpace(20),
-                                    customText(
-                                        text: 'Remove',
-                                        fontSize: 11,
-                                        textColor: AppColors.white),
-                                  ],
-                                ),
-                              ),
-                            ),
-
-                            // ref
-                            //     .read(authNotifier.notifier)
-                            //     .removedata(
-                            //         state.listOfvehicleType, element),
-                            // key: UniqueKey(),
-                            // child: vehicleComponent(
-                            //   uncheck: () => isCurrent.value = index,
-                            //   isSelected:
-                            //       isCurrent.value == index ? true : false,
-                            //   label: element.vehicle,
-                            //   increaseValue: () => ref
-                            //       .read(authNotifier.notifier)
-                            //       .incrementVehicleFunc(element.vehicle),
-                            //   quantity: element.quantity.toString(),
-                            //   decreaseValue: element.quantity == 0
-                            //       ? () {}
-                            //       : () => ref
-                            //           .read(authNotifier.notifier)
-                            //           .decrementVehicleFunc(
-                            //               element.vehicle),
-                            // ),
-                          ),
-                        ))
-                    .values
-                    .toList(),
-              ),
-              heightSpace(3),
-              customText(
-                  text: 'What kind of goods can you move?',
-                  fontSize: 11,
-                  textColor: AppColors.textPrimary),
-              heightSpace(3),
-              DropdownSearch<String>.multiSelection(
-                items: const [
-                  'Documents, Files, Books or Stationary',
-                  'Small appliances',
-                  'Large Electronics, Luggages or Furniture',
-                  'Frozen items, Perishables, or Prepared food delivery',
-                  'Clothing, Accessories or Baby Products'
-                ],
-
-                popupProps: const PopupPropsMultiSelection.menu(
-                  showSelectedItems: true,
+                    Flexible(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          customText(
+                              text: 'Company information',
+                              fontSize: 14,
+                              textColor: AppColors.textPrimary),
+                          heightSpace(1),
+                          bodyText(text: 'We want to know more about you')
+                        ],
+                      ),
+                    )
+                  ],
                 ),
-                validator: (value) => (value!.isEmpty) ? 'Required' : null,
-                // onChanged: (v) =>
-                //     ref.read(authNotifier.notifier).kindOfGoodsFunc(v),
-                // selectedItems: const [
-                //   'Documents, Files, Books or Stationary'
-                // ],
-              ),
-              heightSpace(3),
-              TrackBudiDropdown(
-                  dropdownList: const ["100", "200"],
-                  label: 'Deliveries per month',
-                  onChange: (val) => log(val.toString())),
-              heightSpace(3),
-              TrackBudiDropdown(
-                  dropdownList: const ["Instagram", "facebook"],
-                  label: 'How did you hear about us',
-                  onChange: (val) => log(val.toString())),
-              heightSpace(3),
-              const TrackBudiTextFormField(
-                label: 'Enter referral code (Optional)',
-              ),
-              heightSpace(3),
-              TrackBudiButton(
-                buttonText: 'I accept',
-                // onTap: () => context.pushRoute(SettingUp()),
+                const AppDivider(),
+                heightSpace(6),
+                TrackBudiTextFormField(
+                  label: 'Name of Company',
+                  validator: stringValidation,
+                  textEditingController: _nameOfCompany,
+                ),
+                heightSpace(2),
+                customText(
+                    text: 'Select country',
+                    fontSize: 14,
+                    textColor: AppColors.textPrimary),
+                heightSpace(2),
+                CountryWidget(selectCountry: (val) {
+                  _country.text = val!;
+                }),
+                heightSpace(2),
+                TrackBudiTextFormField(
+                  isAddress: true,
+                  label: 'Address',
+                  textEditingController: _address,
+                  validator: stringValidation,
+                ),
+                heightSpace(2),
+                TrackBudiTextFormField(
+                  label: 'Landmark',
+                  validator: stringValidation,
+                  textEditingController: _landMark,
+                ),
+                heightSpace(2),
+                TrackBudiTextFormField(
+                  label: 'Website',
+                  hintText: 'Optional',
+                  textEditingController: _website,
+                ),
+                heightSpace(3),
+                customText(
+                    text: 'Vehicle type',
+                    fontSize: 14,
+                    textColor: AppColors.textPrimary),
+                heightSpace(2),
+                Column(
+                  children: vehicleTypes
+                      .asMap()
+                      .map((index, element) => MapEntry(
+                            index,
+                            Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 5),
+                                child: vehicleComponent(
+                                    isSelected: vehicleTypes[index]
+                                        ['isSelected'],
+                                    uncheck: () {
+                                      setState(() {
+                                        vehicleTypes[index]['isSelected'] =
+                                            !vehicleTypes[index]['isSelected'];
+                                      });
+                                    },
+                                    increaseValue: () {
+                                      setState(() {
+                                        vehicleTypes[index]['quantity']++;
+                                      });
 
-                disable: isButtonDisabled.value,
-                isLoading: isLoading.value,
-                // onTap:
-              ),
-              heightSpace(3),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  bodyText(text: 'Already have an account?'),
-                  widthSpace(2),
-                  GestureDetector(
-                    // onTap: () => context.pushRoute(LoginView()),
-                    child: customText(
-                        text: 'Login',
-                        fontSize: 14,
-                        textColor: AppColors.textPrimary),
-                  )
-                ],
-              ),
-              heightSpace(5)
-            ],
+                                      if (newVehicleType.any((element) =>
+                                          element.vehicle ==
+                                          vehicleTypes[index]['vehicleType'])) {
+                                        newVehicleType[index].quantity =
+                                            newVehicleType[index].quantity! + 1;
+                                        return;
+                                      }
+                                      newVehicleType.add(VehicleTypes(
+                                          vehicle: vehicleTypes[index]
+                                              ['vehicleType'],
+                                          quantity: 1));
+
+                                      log(newVehicleType.toString());
+                                    },
+                                    decreaseValue: () {
+                                      if (vehicleTypes[index]['quantity'] > 0) {
+                                        setState(() {
+                                          vehicleTypes[index]['quantity']--;
+                                        });
+
+                                        if (newVehicleType.any((element) =>
+                                            element.vehicle ==
+                                            vehicleTypes[index]
+                                                ['vehicleType'])) {
+                                          newVehicleType[index].quantity =
+                                              newVehicleType[index].quantity! -
+                                                  1;
+                                          return;
+                                        }
+
+                                        log(vehicleTypes.toString());
+                                      }
+                                    },
+                                    label: vehicleTypes[index]['vehicleType'],
+                                    quantity: vehicleTypes[index]['quantity']
+                                        .toString())),
+                          ))
+                      .values
+                      .toList(),
+                ),
+                heightSpace(3),
+                customText(
+                    text: 'What kind of goods can you move?',
+                    fontSize: 14,
+                    textColor: AppColors.textPrimary),
+                heightSpace(3),
+                DropdownSearch<String>.multiSelection(
+                  items: const [
+                    'Documents, Files, Books or Stationary',
+                    'Small appliances',
+                    'Large Electronics, Luggages or Furniture',
+                    'Frozen items, Perishables, or Prepared food delivery',
+                    'Clothing, Accessories or Baby Products'
+                  ],
+                  popupProps: const PopupPropsMultiSelection.menu(
+                    showSelectedItems: true,
+                  ),
+                  validator: (value) => (value!.isEmpty) ? 'Required' : null,
+                  onChanged: (val) {
+                    whatDoyouMove = val;
+                  },
+                ),
+                heightSpace(3),
+                TrackBudiDropdown(
+                    validator: dropdownValidation,
+                    dropdownList: deliveriesPerMonth,
+                    label: 'Deliveries per month',
+                    onChange: (val) {
+                      _deliveriesPerMonth.text = val.toString();
+                    }),
+                heightSpace(3),
+                TrackBudiDropdown(
+                    validator: dropdownValidation,
+                    dropdownList: aboutUs,
+                    label: 'How did you hear about us',
+                    onChange: (val) {
+                      _aboutUs.text = val.toString();
+                    }),
+                heightSpace(3),
+                TrackBudiTextFormField(
+                  label: 'Enter referral code (Optional)',
+                  textEditingController: referralCode,
+                ),
+                heightSpace(3),
+                TrackBudiButton(
+                  buttonText: 'I accept',
+                  disable: !isButtonDisabled,
+                  onTap: onTap,
+                ),
+                heightSpace(3),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    bodyText(text: 'Already have an account?'),
+                    widthSpace(2),
+                    GestureDetector(
+                      onTap: () => context.push(AppRoutes.login),
+                      child: customText(
+                          text: 'Login',
+                          fontSize: 14,
+                          textColor: AppColors.textPrimary),
+                    )
+                  ],
+                ),
+                heightSpace(5)
+              ],
+            ),
           ),
         ),
       ),
     );
+  }
+
+  onTap() async {
+    final logisticsModel = LogisticsModel(
+      companyName: _nameOfCompany.text,
+      country: _country.text.isEmpty ? "Nigeria" : _country.text,
+      address: _address.text,
+      landmark: _landMark.text,
+      website: _website.text,
+      vehicleTypes: newVehicleType,
+      goodsType: whatDoyouMove,
+      deliveriesPerMonth: _deliveriesPerMonth.text,
+      howDidYouHear: _aboutUs.text,
+      referralCode: referralCode.text,
+      latitude: 0.0,
+      longitude: 0.0,
+    );
+    bool result = await _authRepo.addLogistics(logisticsModel);
+    if (result) {
+      if (context.mounted) {
+        context.push(AppRoutes.guidelinePreview);
+      }
+    }
   }
 }

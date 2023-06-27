@@ -7,6 +7,7 @@ import '../../../../core/shared/resources/app_spacer.dart';
 
 class TrackBudiTextFormField extends StatefulWidget {
   final TextEditingController? textEditingController;
+  final bool isAddress;
   final String? label;
   final String? hintText;
   final Widget? prefixIcon;
@@ -18,6 +19,7 @@ class TrackBudiTextFormField extends StatefulWidget {
   final TextInputType keyboardType;
   const TrackBudiTextFormField(
       {super.key,
+      this.isAddress = false,
       this.label,
       this.inputFormatters,
       this.onChanged,
@@ -65,7 +67,24 @@ class _TrackBudiTextFormFieldState extends State<TrackBudiTextFormField> {
                   borderRadius: BorderRadius.all(Radius.circular(5))),
               contentPadding: const EdgeInsets.only(left: 10),
               errorStyle: const TextStyle(fontSize: 14),
-              suffixIcon: showPasswordIcon(widget.isPassword),
+              // suffixIcon:  showPasswordIcon(widget.isPassword),
+
+              suffixIcon: (() {
+                if (widget.isPassword) {
+                  return showPasswordIcon(widget.isPassword);
+                }
+                if (widget.isAddress) {
+                  return Container(
+                    margin: const EdgeInsets.all(10),
+                    width: 30,
+                    height: 30,
+                    decoration: BoxDecoration(
+                        border: Border.all(color: AppColors.textformGrey),
+                        shape: BoxShape.circle),
+                    child: const Icon(Icons.location_on_outlined),
+                  );
+                }
+              }()),
               hintText: widget.hintText,
               hintStyle: const TextStyle(fontSize: 14),
               prefixIcon: widget.prefixIcon,

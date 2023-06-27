@@ -16,9 +16,9 @@ vehicleComponent(
     GestureDetector(
       onTap: uncheck,
       child: Container(
-        padding: const EdgeInsets.only(left: 20),
+        padding: const EdgeInsets.only(left: 20, right: 10),
         width: double.infinity,
-        height: 7.5.h,
+        height: 6.h,
         decoration: BoxDecoration(
             border: Border.all(color: AppColors.textformGrey),
             borderRadius: BorderRadius.circular(8)),
@@ -51,7 +51,7 @@ vehicleComponent(
           Expanded(
             child: customText(
                 text: label ?? '',
-                fontSize: 11,
+                fontSize: 14,
                 textColor: AppColors.textPrimary),
           ),
           SizedBox(
@@ -63,10 +63,12 @@ vehicleComponent(
                   child: arithmeticContainer('-'),
                   onTap: decreaseValue,
                 ),
+                widthSpace(1),
                 customText(
                     text: quantity ?? '',
-                    fontSize: 11,
+                    fontSize: 14,
                     textColor: AppColors.textPrimary),
+                widthSpace(1),
                 GestureDetector(
                   onTap: increaseValue,
                   child: arithmeticContainer('+'),

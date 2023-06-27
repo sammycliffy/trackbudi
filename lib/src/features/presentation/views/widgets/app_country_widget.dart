@@ -16,7 +16,7 @@ class CountryWidget extends StatefulWidget {
 }
 
 class _CountryWidgetState extends State<CountryWidget> {
-  String countryName = '';
+  String countryName = 'Nigeria';
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -80,7 +80,7 @@ class _CountryWidgetState extends State<CountryWidget> {
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             customText(
                 text: countryName,
-                fontSize: 11,
+                fontSize: 14,
                 textColor: AppColors.textPrimary),
             SvgPicture.asset(AppImages.dropdown)
           ]),

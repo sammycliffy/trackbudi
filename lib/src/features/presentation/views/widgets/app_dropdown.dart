@@ -6,9 +6,11 @@ import 'package:trackbudi_vendor/src/features/presentation/views/widgets/custom_
 class TrackBudiDropdown extends StatefulWidget {
   final List<String>? dropdownList;
   final Function(Object?)? onChange;
+  final String? Function(String?)? validator;
   final String label;
   const TrackBudiDropdown(
       {super.key,
+      this.validator,
       required this.dropdownList,
       required this.label,
       this.onChange});
@@ -25,16 +27,17 @@ class _TrackBudiDropdownState extends State<TrackBudiDropdown> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         customText(
-            text: widget.label, fontSize: 11, textColor: AppColors.textPrimary),
+            text: widget.label, fontSize: 14, textColor: AppColors.textPrimary),
         heightSpace(2),
         SizedBox(
-            height: 57,
+            height: 55,
             child: DropdownButtonFormField(
-
-                // value: widget.dropdownList?.first,
+                value: widget.dropdownList?.first,
+                validator: widget.validator,
                 decoration: InputDecoration(
                     fillColor: Colors.white,
                     filled: true,
+                    errorStyle: const TextStyle(height: 50, fontSize: 16),
                     enabledBorder: AppColors.normalBorder,
                     errorBorder: AppColors.errorBorder,
                     focusedBorder: AppColors.normalBorder,
@@ -45,7 +48,7 @@ class _TrackBudiDropdownState extends State<TrackBudiDropdown> {
                         child: Text(
                           text.toString(),
                           style: const TextStyle(
-                              color: AppColors.textPrimary, fontSize: 11),
+                              color: AppColors.textPrimary, fontSize: 14),
                         )))
                     .toList(),
                 onChanged: widget.onChange)),
