@@ -1,0 +1,45 @@
+name: trackbudi_vendor
+description: A new Flutter project.
+publish_to: "none"
+version: 0.1.0
+
+environment:
+  sdk: ">=3.0.3 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  dio: ^4.0.6
+  pinput:
+  flutter_sizer:
+  intl_phone_field:
+  get_it: ^7.2.0
+  dropdown_search: ^5.0.6
+  flutter_svg: ^1.1.6
+  fluttertoast: ^8.2.2
+  country_picker:
+  dots_indicator: ^3.0.0
+  go_router: ^8.2.0
+  shared_preferences: ^2.0.15
+  flutter_riverpod: ^2.3.6
+  provider:
+  hooks_riverpod:
+  flutter_hooks:
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
+
+  fonts:
+    - family: Euclad
+      fonts:
+        - asset: assets/fonts/Euclid_Circular_A_Regular.ttf
+        - asset: assets/fonts/Euclid_Circular_A_Bold.ttf
+  assets:
+    - assets/images/
+    - assets/fonts/
+    - assets/svgs/
