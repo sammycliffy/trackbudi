@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:trackbudi_vendor/src/config/keys/routes.dart';
+import 'package:trackbudi_vendor/src/features/data/models/otp_model.dart';
 import 'package:trackbudi_vendor/src/features/presentation/views/main_auth/account_selection.dart';
 import 'package:trackbudi_vendor/src/features/presentation/views/main_auth/community_guideline.dart';
 import 'package:trackbudi_vendor/src/features/presentation/views/main_auth/login_email.dart';
@@ -31,7 +32,7 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
           name: AppRoutes.otpView,
           path: AppRoutes.otpView,
           builder: (_, state) => OTPView(
-                phoneNumber: state.extra as String,
+                otpModel: state.extra as OTPModel,
               )),
       GoRoute(
           name: AppRoutes.personalInfo,
@@ -44,11 +45,11 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
       GoRoute(
           name: AppRoutes.login,
           path: AppRoutes.login,
-          builder: (_, state) => const LoginView()),
+          builder: (_, state) => LoginView()),
       GoRoute(
           name: AppRoutes.vendor,
           path: AppRoutes.vendor,
-          builder: (_, state) => VendorRegistration()),
+          builder: (_, state) => const VendorRegistration()),
       GoRoute(
           name: AppRoutes.logistics,
           path: AppRoutes.logistics,

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
+import 'package:trackbudi_vendor/src/config/keys/routes.dart';
 import 'package:trackbudi_vendor/src/core/mixin/validators.dart';
 import 'package:trackbudi_vendor/src/core/shared/resources/app_images.dart';
 import 'package:trackbudi_vendor/src/core/shared/resources/app_spacer.dart';
@@ -19,13 +21,18 @@ class LoginEmail extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isButtonDisabled = useState<bool>(true);
-    final isLoading = useState<bool>(false);
+    final isButtonEnabled = useState<bool>(true);
+
     onTap() async {
-      isLoading.value = true;
-      isButtonDisabled.value = true;
-      bool result =
-          await _authRepo.loginWithEmail(_emailAddress.text, _password.text);
+      if (_formKey.currentState!.validate()) {
+        bool result =
+            await _authRepo.loginWithEmail(_emailAddress.text, _password.text);
+        if (result) {
+          if (context.mounted) {
+            context.push(AppRoutes.commuinityGuide);
+          }
+        }
+      }
     }
 
     return Scaffold(
@@ -36,10 +43,7 @@ class LoginEmail extends HookWidget {
           key: _formKey,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: () {
-            bool isValidated = _formKey.currentState!.validate();
-            if (isValidated) {
-              isButtonDisabled.value = false;
-            }
+            isButtonEnabled.value = _formKey.currentState!.validate();
           },
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -92,8 +96,7 @@ class LoginEmail extends HookWidget {
               heightSpace(4),
               TrackBudiButton(
                   buttonText: 'Login',
-                  disable: isButtonDisabled.value,
-                  isLoading: isLoading.value,
+                  isButtonEnabled: isButtonEnabled.value,
                   onTap: onTap),
               heightSpace(3),
             ],

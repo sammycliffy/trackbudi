@@ -4,9 +4,11 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:trackbudi_vendor/src/config/services/api/api_response.dart';
 import 'package:trackbudi_vendor/src/config/services/endpoints.dart';
 import 'package:trackbudi_vendor/src/config/services/storage_service.dart';
+import 'package:trackbudi_vendor/src/features/presentation/views/widgets/app_overlay.dart';
 import 'package:trackbudi_vendor/src/features/presentation/views/widgets/toast.dart';
 
 import '../../keys/app_keys.dart';
@@ -14,7 +16,9 @@ import '../../locator/app_locator.dart';
 
 void _handleDioError(ApiResponse response) {
   // showToast(response.message!);
+  OverlaySupportEntry.of(AppHelper.overlayContext!)?.dismiss();
   ToastResp.toastMsgError(resp: response.message);
+
   inspect(response.title);
 }
 
@@ -122,10 +126,10 @@ class ApiClient {
 
         final options = Options(headers: header);
         log("${_dio.options.baseUrl}$endpoint $body");
-
+        AppHelper.showOverlayLoader();
         final response =
             await _dio.post(endpoint, data: body, options: options);
-
+        OverlaySupportEntry.of(AppHelper.overlayContext!)?.dismiss();
         return response.data;
       },
     );
@@ -143,8 +147,10 @@ class ApiClient {
         final header = _defaultHeader;
         final options = Options(headers: header);
         log('put request');
+        AppHelper.showOverlayLoader();
         log("${_dio.options.baseUrl}$endpoint $body");
         final response = await _dio.put(endpoint, data: body, options: options);
+        OverlaySupportEntry.of(AppHelper.overlayContext!)?.dismiss();
         debugPrint('Response from $endpoint \n${response.data}');
         return response.data;
       },

@@ -43,7 +43,7 @@ class _LogisticsState extends State<Logistics> {
   List<VehicleTypes> newVehicleType = [];
   List<String> whatDoyouMove = [];
   bool isValidated = false;
-  bool isButtonDisabled = true;
+  bool isButtonEnabled = false;
 
   List<Map> vehicleTypes = [
     {"vehicleType": "Motor bike", "quantity": 0, "isSelected": false},
@@ -79,7 +79,7 @@ class _LogisticsState extends State<Logistics> {
             autovalidateMode: AutovalidateMode.onUserInteraction,
             onChanged: () {
               setState(() {
-                isButtonDisabled = _formkey.currentState!.validate();
+                isButtonEnabled = _formkey.currentState!.validate();
               });
             },
             key: _formkey,
@@ -257,7 +257,7 @@ class _LogisticsState extends State<Logistics> {
                 heightSpace(3),
                 TrackBudiButton(
                   buttonText: 'I accept',
-                  disable: !isButtonDisabled,
+                  isButtonEnabled: isButtonEnabled,
                   onTap: onTap,
                 ),
                 heightSpace(3),
@@ -286,19 +286,19 @@ class _LogisticsState extends State<Logistics> {
 
   onTap() async {
     final logisticsModel = LogisticsModel(
-      companyName: _nameOfCompany.text,
-      country: _country.text.isEmpty ? "Nigeria" : _country.text,
-      address: _address.text,
-      landmark: _landMark.text,
-      website: _website.text,
-      vehicleTypes: newVehicleType,
-      goodsType: whatDoyouMove,
-      deliveriesPerMonth: _deliveriesPerMonth.text,
-      howDidYouHear: _aboutUs.text,
-      referralCode: referralCode.text,
-      latitude: 0.0,
-      longitude: 0.0,
-    );
+        companyName: _nameOfCompany.text,
+        country: _country.text.isEmpty ? "Nigeria" : _country.text,
+        address: _address.text,
+        landmark: _landMark.text,
+        website: _website.text,
+        vehicleTypes: newVehicleType,
+        goodsType: whatDoyouMove,
+        deliveriesPerMonth: _deliveriesPerMonth.text,
+        howDidYouHear: _aboutUs.text,
+        referralCode: referralCode.text,
+        latitude: 0.0,
+        longitude: 0.0,
+        userType: "LogisticsPartner");
     bool result = await _authRepo.addLogistics(logisticsModel);
     if (result) {
       if (context.mounted) {

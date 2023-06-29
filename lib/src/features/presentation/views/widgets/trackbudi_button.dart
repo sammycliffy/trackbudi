@@ -11,7 +11,7 @@ class TrackBudiButton extends StatelessWidget {
   final bool hasIcon;
   final Widget? iconWidget;
   final bool isSmall;
-  final bool disable;
+  final bool isButtonEnabled;
   final bool hasBorder;
   final double? height;
   final Color? borderColor;
@@ -25,7 +25,7 @@ class TrackBudiButton extends StatelessWidget {
       this.hasIcon = false,
       this.iconWidget,
       this.isSmall = false,
-      this.disable = false,
+      this.isButtonEnabled = true,
       this.hasBorder = false,
       this.height = 50,
       this.borderColor})
@@ -35,16 +35,16 @@ class TrackBudiButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTapDown: (_) => HapticFeedback.lightImpact(),
-      onTap: onTap,
+      onTap: isButtonEnabled ? onTap : null,
       child: Container(
         height: height,
         width: isSmall ? 150 : double.infinity,
         decoration: BoxDecoration(
           color: isLoading!
               ? color.withOpacity(.5)
-              : disable
-                  ? color.withOpacity(.6)
-                  : color,
+              : isButtonEnabled
+                  ? color
+                  : color.withOpacity(.6),
           borderRadius: BorderRadius.circular(40),
           border: hasBorder
               ? Border.all(color: borderColor!)

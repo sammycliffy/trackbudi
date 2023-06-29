@@ -1,5 +1,6 @@
 class LogisticsModel {
   String? companyName;
+  String? userType;
   String? country;
   String? address;
   String? landmark;
@@ -21,6 +22,7 @@ class LogisticsModel {
       this.vehicleTypes,
       this.goodsType,
       this.deliveriesPerMonth,
+      this.userType,
       this.howDidYouHear,
       this.referralCode,
       this.latitude,
@@ -44,6 +46,7 @@ class LogisticsModel {
     referralCode = json['referralCode'];
     latitude = json['latitude'];
     longitude = json['longitude'];
+    userType = json['userType'];
   }
 
   Map<String, dynamic> toJson() {
@@ -62,6 +65,7 @@ class LogisticsModel {
     data['referralCode'] = referralCode;
     data['latitude'] = latitude;
     data['longitude'] = longitude;
+    data['userType'] = userType;
     return data;
   }
 }

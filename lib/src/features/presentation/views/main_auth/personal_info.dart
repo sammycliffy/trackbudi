@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -30,20 +28,21 @@ class PersonalInfo extends HookWidget {
   PersonalInfo({super.key});
   @override
   Widget build(BuildContext context) {
-    final isButtonDisabled = useState<bool>(true);
+    final isButtonEnabled = useState<bool>(false);
     final isLoading = useState<bool>(false);
     isCheckedState(value) {
       _isChecked = value;
       if (_formKey.currentState!.validate()) {
         if (_isChecked) {
-          isButtonDisabled.value = false;
+          isButtonEnabled.value = true;
+          return;
         }
+        isButtonEnabled.value = false;
       }
     }
 
     onTap() async {
-      log(isButtonDisabled.value.toString());
-      if (!isButtonDisabled.value) {
+      if (isButtonEnabled.value) {
         isLoading.value = true;
         bool result = await _authRepo.registerUser(
             firstName: _firstName.text,
@@ -67,7 +66,14 @@ class PersonalInfo extends HookWidget {
           ),
           child: Form(
             autovalidateMode: AutovalidateMode.onUserInteraction,
-            onChanged: () => _formKey.currentState?.validate(),
+            onChanged: () {
+              bool isValidated = _formKey.currentState!.validate();
+              if (isValidated && _isChecked) {
+                isButtonEnabled.value = true;
+                return;
+              }
+              isButtonEnabled.value = false;
+            },
             key: _formKey,
             child: Column(
               children: [
@@ -160,8 +166,7 @@ class PersonalInfo extends HookWidget {
                 ),
                 heightSpace(3),
                 TrackBudiButton(
-                  disable: isButtonDisabled.value,
-                  isLoading: isLoading.value,
+                  isButtonEnabled: isButtonEnabled.value,
                   onTap: onTap,
                   buttonText: 'Confirm',
                 ),

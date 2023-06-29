@@ -85,32 +85,14 @@ class AccountSelection extends HookWidget {
     final isLogistics = useState<bool>(false);
     final isVendor = useState<bool>(false);
     final isLoading = useState<bool>(false);
-    final isButtonDisabled = useState<bool>(true);
-
-    logistics() async {
-      isLoading.value = true;
-      isButtonDisabled.value = true;
-      bool result = await authRepo.registerLogistics();
-      if (context.mounted) {
-        context.push(AppRoutes.logistics);
-      }
-    }
-
-    vendor() async {
-      isLoading.value = true;
-      isButtonDisabled.value = true;
-      bool result = await authRepo.registerVendor();
-      if (context.mounted) {
-        context.push(AppRoutes.vendor);
-      }
-    }
+    final isButtonEnabled = useState<bool>(false);
 
     onTap() {
       if (isLogistics.value) {
-        logistics();
+        context.push(AppRoutes.logistics);
         return;
       }
-      vendor();
+      context.push(AppRoutes.vendor);
     }
 
     return Scaffold(
@@ -134,7 +116,7 @@ class AccountSelection extends HookWidget {
                 onTap: () {
                   isLogistics.value = true;
                   isVendor.value = false;
-                  isButtonDisabled.value = false;
+                  isButtonEnabled.value = true;
                 },
                 child: _accountSelectionContainer(
                     'Logistics partner',
@@ -149,7 +131,7 @@ class AccountSelection extends HookWidget {
                 onTap: () {
                   isLogistics.value = false;
                   isVendor.value = true;
-                  isButtonDisabled.value = false;
+                  isButtonEnabled.value = true;
                 },
               ),
               heightSpace(4),
@@ -157,7 +139,7 @@ class AccountSelection extends HookWidget {
                 buttonText: 'Continue',
                 onTap: onTap,
                 isLoading: isLoading.value,
-                disable: isButtonDisabled.value,
+                isButtonEnabled: isButtonEnabled.value,
               ),
             ],
           ),

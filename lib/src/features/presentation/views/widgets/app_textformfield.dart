@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:trackbudi_vendor/src/core/shared/resources/colors.dart';
 import 'package:trackbudi_vendor/src/features/presentation/views/widgets/custom_text.dart';
+import 'package:trackbudi_vendor/src/features/presentation/views/widgets/google_maps.dart';
 
 import '../../../../core/shared/resources/app_spacer.dart';
 
@@ -74,14 +75,19 @@ class _TrackBudiTextFormFieldState extends State<TrackBudiTextFormField> {
                   return showPasswordIcon(widget.isPassword);
                 }
                 if (widget.isAddress) {
-                  return Container(
-                    margin: const EdgeInsets.all(10),
-                    width: 30,
-                    height: 30,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: AppColors.textformGrey),
-                        shape: BoxShape.circle),
-                    child: const Icon(Icons.location_on_outlined),
+                  return GestureDetector(
+                    onTap: () {
+                      googleMaps();
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.all(10),
+                      width: 30,
+                      height: 30,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: AppColors.textformGrey),
+                          shape: BoxShape.circle),
+                      child: const Icon(Icons.location_on_outlined),
+                    ),
                   );
                 }
               }()),
