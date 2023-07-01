@@ -4,10 +4,12 @@ class OTPTimer extends StatefulWidget {
   int time;
   double fontSize;
   Color timeColor;
+  Function(String?)? onChange;
   OTPTimer(
       {Key? key,
       this.time = 60,
       this.fontSize = 14,
+      this.onChange,
       this.timeColor = Colors.black})
       : super(key: key);
   @override
@@ -79,6 +81,7 @@ class OTPTimerState extends State<OTPTimer>
       });
     _controller!
         .reverse(from: _controller!.value == 0.0 ? 1.0 : _controller!.value);
+    widget.onChange!(timerString);
     // _startCountdown();
   }
 }

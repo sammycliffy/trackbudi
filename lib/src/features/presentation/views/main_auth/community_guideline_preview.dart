@@ -26,20 +26,23 @@ class CommunityGuildelinePreview extends StatelessWidget {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Row(
-                    children: [
-                      SvgPicture.asset(
-                        AppImages.arrowBack,
-                        color: AppColors.white,
-                      ),
-                      widthSpace(2),
-                      customText(
-                          text: 'Back',
-                          fontSize: 12,
-                          textColor: AppColors.white),
-                    ],
+                GestureDetector(
+                  onTap: () => context.pop(),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Row(
+                      children: [
+                        SvgPicture.asset(
+                          AppImages.arrowBack,
+                          color: AppColors.white,
+                        ),
+                        widthSpace(2),
+                        customText(
+                            text: 'Back',
+                            fontSize: 12,
+                            textColor: AppColors.white),
+                      ],
+                    ),
                   ),
                 ),
                 heightSpace(4),

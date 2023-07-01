@@ -24,7 +24,6 @@ class OTPView extends HookWidget {
   String? otp;
 
   OTPView({super.key, required this.otpModel});
-
   @override
   Widget build(BuildContext context) {
     final isButtonEnabled = useState<bool>(false);
@@ -52,10 +51,13 @@ class OTPView extends HookWidget {
     }
 
     resend() async {
-      bool result = await _authRepo.resendOTP();
-      if (result) {
-        timer.value = 60;
-      }
+      // bool result = await _authRepo.resendOTP();
+      // if (result) {
+      //   timer.value = 60;
+      // }
+    }
+    onChange(String val) {
+      log(val);
     }
 
     return Scaffold(
@@ -113,11 +115,11 @@ class OTPView extends HookWidget {
             ),
             heightSpace(4),
             Center(
-              child: OTPTimer(
-                key: timerkey,
-                time: timer.value,
-              ),
-            ),
+                child: OTPTimer(
+              key: timerkey,
+              time: timer.value,
+              onChange: (val) => onChange(val!),
+            )),
             heightSpace(6),
             TrackBudiButton(
                 buttonText: 'Verify and continue',

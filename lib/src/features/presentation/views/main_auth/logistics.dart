@@ -16,6 +16,7 @@ import 'package:trackbudi_vendor/src/features/presentation/views/widgets/app_div
 import 'package:trackbudi_vendor/src/features/presentation/views/widgets/app_dropdown.dart';
 import 'package:trackbudi_vendor/src/features/presentation/views/widgets/app_textformfield.dart';
 import 'package:trackbudi_vendor/src/features/presentation/views/widgets/custom_text.dart';
+import 'package:trackbudi_vendor/src/features/presentation/views/widgets/google_address.dart';
 import 'package:trackbudi_vendor/src/features/presentation/views/widgets/trackbudi_button.dart';
 import 'package:trackbudi_vendor/src/features/presentation/views/widgets/vehicle_widget.dart';
 
@@ -76,12 +77,12 @@ class _LogisticsState extends State<Logistics> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Form(
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            onChanged: () {
-              setState(() {
-                isButtonEnabled = _formkey.currentState!.validate();
-              });
-            },
+            // autovalidateMode: AutovalidateMode.onUserInteraction,
+            // onChanged: () {
+            //   setState(() {
+            //     isButtonEnabled = _formkey.currentState!.validate();
+            //   });
+            // },
             key: _formkey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -125,10 +126,8 @@ class _LogisticsState extends State<Logistics> {
                   _country.text = val!;
                 }),
                 heightSpace(2),
-                TrackBudiTextFormField(
-                  isAddress: true,
-                  label: 'Address',
-                  textEditingController: _address,
+                GoogleAddressField(
+                  controller: _address,
                   validator: stringValidation,
                 ),
                 heightSpace(2),
@@ -257,7 +256,7 @@ class _LogisticsState extends State<Logistics> {
                 heightSpace(3),
                 TrackBudiButton(
                   buttonText: 'I accept',
-                  isButtonEnabled: isButtonEnabled,
+                  isButtonEnabled: true,
                   onTap: onTap,
                 ),
                 heightSpace(3),
@@ -285,24 +284,26 @@ class _LogisticsState extends State<Logistics> {
   }
 
   onTap() async {
-    final logisticsModel = LogisticsModel(
-        companyName: _nameOfCompany.text,
-        country: _country.text.isEmpty ? "Nigeria" : _country.text,
-        address: _address.text,
-        landmark: _landMark.text,
-        website: _website.text,
-        vehicleTypes: newVehicleType,
-        goodsType: whatDoyouMove,
-        deliveriesPerMonth: _deliveriesPerMonth.text,
-        howDidYouHear: _aboutUs.text,
-        referralCode: referralCode.text,
-        latitude: 0.0,
-        longitude: 0.0,
-        userType: "LogisticsPartner");
-    bool result = await _authRepo.addLogistics(logisticsModel);
-    if (result) {
-      if (context.mounted) {
-        context.push(AppRoutes.guidelinePreview);
+    if (_formkey.currentState!.validate()) {
+      final logisticsModel = LogisticsModel(
+          companyName: _nameOfCompany.text,
+          country: _country.text.isEmpty ? "Nigeria" : _country.text,
+          address: _address.text,
+          landmark: _landMark.text,
+          website: _website.text,
+          vehicleTypes: newVehicleType,
+          goodsType: whatDoyouMove,
+          deliveriesPerMonth: _deliveriesPerMonth.text,
+          howDidYouHear: _aboutUs.text,
+          referralCode: referralCode.text,
+          latitude: 0.0,
+          longitude: 0.0,
+          userType: "LogisticsPartner");
+      bool result = await _authRepo.addLogistics(logisticsModel);
+      if (result) {
+        if (context.mounted) {
+          context.push(AppRoutes.guidelinePreview);
+        }
       }
     }
   }

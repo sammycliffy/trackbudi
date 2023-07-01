@@ -26,7 +26,9 @@ dependencies:
   hooks_riverpod:
   flutter_hooks:
   google_maps_flutter: ^2.1.2
+  url_launcher: ^6.1.11
   overlay_support: ^2.1.0
+  google_places_flutter: ^2.0.5
 
 dev_dependencies:
   flutter_test:

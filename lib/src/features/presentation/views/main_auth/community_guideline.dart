@@ -4,6 +4,7 @@ import 'package:trackbudi_vendor/src/core/shared/resources/colors.dart';
 import 'package:trackbudi_vendor/src/features/presentation/views/widgets/app_app_bar.dart';
 import 'package:trackbudi_vendor/src/features/presentation/views/widgets/custom_text.dart';
 import 'package:trackbudi_vendor/src/features/presentation/views/widgets/rowsection.dart';
+import 'package:trackbudi_vendor/src/features/presentation/views/widgets/trackbudi_button.dart';
 
 class CommunityGuideline extends StatelessWidget {
   const CommunityGuideline({super.key});
@@ -84,7 +85,11 @@ class CommunityGuideline extends StatelessWidget {
                 'Everyone on TrackBudi must follow these guidelines, and they apply to all parts of our platform. Failure to comply with these guidelines may result in warnings, temporary or permanent suspensions, or account termination, depending on the severity of the violation.'),
             heightSpace(2),
             rowSection(
-                "Remember, TrackBudi is a collaborative platform meant to empower and connect users. Let's work together to create a vibrant, supportive, and inclusive community. Thank you for being a part of TrackBudi!")
+                "Remember, TrackBudi is a collaborative platform meant to empower and connect users. Let's work together to create a vibrant, supportive, and inclusive community. Thank you for being a part of TrackBudi!"),
+            heightSpace(5),
+            const TrackBudiButton(
+              buttonText: "I Accept",
+            )
           ],
         ),
       )),

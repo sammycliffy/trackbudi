@@ -27,7 +27,6 @@ class VendorRegistration extends StatefulWidget {
 
 class _VendorRegistrationState extends State<VendorRegistration> {
   final _businessName = TextEditingController();
-  bool isButtonEnabled = false;
   List<String> typeOfGoods = [];
   final _formKey = GlobalKey<FormState>();
   final _country = TextEditingController();
@@ -46,10 +45,6 @@ class _VendorRegistrationState extends State<VendorRegistration> {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Form(
             key: _formKey,
-            onChanged: () {
-              isButtonEnabled = _formKey.currentState!.validate();
-              setState(() {});
-            },
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -117,9 +112,12 @@ class _VendorRegistrationState extends State<VendorRegistration> {
                       itemCount: pickuplocation.length,
                       itemBuilder: (context, index) {
                         return CustomVendorPickAddressWidget(
+                          controller: TextEditingController(
+                              text: pickuplocation[index].address),
                           landmark: (val) =>
                               pickuplocation[index].landmark = val,
-                          address: (val) => pickuplocation[index].address = val,
+                          addressChange: (val) =>
+                              pickuplocation[index].address = val,
                           remove: () {
                             if (pickuplocation.length == 1) return;
                             pickuplocation.removeAt(index);
@@ -163,7 +161,6 @@ class _VendorRegistrationState extends State<VendorRegistration> {
                 heightSpace(3),
                 TrackBudiButton(
                   buttonText: 'Confirm',
-                  isButtonEnabled: isButtonEnabled,
                   onTap: onTap,
                 ),
                 heightSpace(3),

@@ -10,6 +10,7 @@ import 'package:trackbudi_vendor/src/features/presentation/views/widgets/app_div
 import 'package:trackbudi_vendor/src/features/presentation/views/widgets/app_textformfield.dart';
 import 'package:trackbudi_vendor/src/features/presentation/views/widgets/checkbox.dart';
 import 'package:trackbudi_vendor/src/features/presentation/views/widgets/custom_text.dart';
+import 'package:trackbudi_vendor/src/features/presentation/views/widgets/toast.dart';
 import 'package:trackbudi_vendor/src/features/presentation/views/widgets/trackbudi_button.dart';
 
 import '../../../../core/shared/resources/app_spacer.dart';
@@ -28,29 +29,24 @@ class PersonalInfo extends HookWidget {
   PersonalInfo({super.key});
   @override
   Widget build(BuildContext context) {
-    final isButtonEnabled = useState<bool>(false);
-    final isLoading = useState<bool>(false);
     isCheckedState(value) {
       _isChecked = value;
-      if (_formKey.currentState!.validate()) {
-        if (_isChecked) {
-          isButtonEnabled.value = true;
-          return;
-        }
-        isButtonEnabled.value = false;
-      }
     }
 
     onTap() async {
-      if (isButtonEnabled.value) {
-        isLoading.value = true;
+      if (_formKey.currentState!.validate()) {
+        if (!_isChecked) {
+          ToastResp.toastMsgError(
+              resp: "You should accept the agree with the terms & conditions");
+          return;
+        }
         bool result = await _authRepo.registerUser(
             firstName: _firstName.text,
             lastName: _lastName.text,
             email: _email.text,
             password: _password.text,
             confirmPassword: _confirmPassword.text);
-        isLoading.value = false;
+
         if (result && context.mounted) {
           context.push(AppRoutes.accountSelection);
         }
@@ -65,15 +61,14 @@ class PersonalInfo extends HookWidget {
             horizontal: 20,
           ),
           child: Form(
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            onChanged: () {
-              bool isValidated = _formKey.currentState!.validate();
-              if (isValidated && _isChecked) {
-                isButtonEnabled.value = true;
-                return;
-              }
-              isButtonEnabled.value = false;
-            },
+            // onChanged: () {
+            //   bool isValidated = _formKey.currentState!.validate();
+            //   if (isValidated && _isChecked) {
+            //     isButtonEnabled.value = true;
+            //     return;
+            //   }
+            //   isButtonEnabled.value = false;
+            // },
             key: _formKey,
             child: Column(
               children: [
@@ -166,7 +161,6 @@ class PersonalInfo extends HookWidget {
                 ),
                 heightSpace(3),
                 TrackBudiButton(
-                  isButtonEnabled: isButtonEnabled.value,
                   onTap: onTap,
                   buttonText: 'Confirm',
                 ),
@@ -185,7 +179,7 @@ class PersonalInfo extends HookWidget {
                     )
                   ],
                 ),
-                heightSpace(5)
+                heightSpace(8)
               ],
             ),
           ),

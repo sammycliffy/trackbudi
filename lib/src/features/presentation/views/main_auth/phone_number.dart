@@ -5,7 +5,6 @@ import 'package:trackbudi_vendor/src/config/keys/routes.dart';
 import 'package:trackbudi_vendor/src/core/shared/resources/app_images.dart';
 import 'package:trackbudi_vendor/src/core/shared/resources/app_spacer.dart';
 import 'package:trackbudi_vendor/src/core/shared/resources/colors.dart';
-import 'package:trackbudi_vendor/src/features/data/models/otp_model.dart';
 import 'package:trackbudi_vendor/src/features/domain/repository/auth_repository.dart';
 import 'package:trackbudi_vendor/src/features/presentation/views/widgets/app_divider.dart';
 import 'package:trackbudi_vendor/src/features/presentation/views/widgets/custom_text.dart';
@@ -15,25 +14,30 @@ import 'package:trackbudi_vendor/src/features/presentation/views/widgets/trackbu
 class PhoneNumber extends HookWidget {
   final AuthRepo _authRepo = AuthRepo();
   final _formKey = GlobalKey<FormState>();
-  final _phoneNumber = TextEditingController();
 
+  String phoneNumber = '';
+  String countryCode = '';
   PhoneNumber({super.key});
 
   @override
   Widget build(BuildContext context) {
-    String phoneNumber = '';
-    String countryCode = '';
     final isButtonEnabled = useState<bool>(false);
 
     onTap() async {
-      bool result =
-          await _authRepo.phoneNumberRegister(countryCode, phoneNumber);
-      if (result) {
-        if (context.mounted) {
-          context.push(AppRoutes.otpView,
-              extra: OTPModel(isSignup: true, phoneNumber: phoneNumber));
-        }
-      }
+      context.push(AppRoutes.vendor);
+      // context.push(AppRoutes.otpView,
+      //     extra: OTPModel(isSignup: true, phoneNumber: phoneNumber));
+
+      // if (_formKey.currentState!.validate()) {
+      //   bool result =
+      //       await _authRepo.phoneNumberRegister(countryCode, phoneNumber);
+      //   if (result) {
+      //     if (context.mounted) {
+      //       context.push(AppRoutes.otpView,
+      //           extra: OTPModel(isSignup: true, phoneNumber: phoneNumber));
+      //     }
+      //   }
+      // }
     }
 
     return Scaffold(
@@ -89,7 +93,6 @@ class PhoneNumber extends HookWidget {
                   phoneNumber = phone.number;
                   countryCode = phone.countryCode;
 
-                  // log(phone.number.toString());
                   // log(phone.countryCode.toString());
                 },
               ),
